@@ -19,7 +19,7 @@ struct Logging::Logging_data
 	std::unique_ptr<std::thread>	logging_thread;
 	std::ofstream					log_file;
 
-	enum : int {
+	enum : unsigned int {
 		log_entry_max_size	= 256,
 		num_log_entries		= 256
 	};
