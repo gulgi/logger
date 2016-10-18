@@ -6,46 +6,16 @@
 
 namespace
 {
-	void variadic_print(std::string& result, const char *s)
+	template<typename T>
+	void variadic_print(std::stringstream& stream, const T& t)
 	{
-		while (*s)
-		{
-			if (*s == '\\')
-			{
-				if (*(s + 1) == '%')
-					++s;
-			}
-			else if (*s == '%')
-			{
-				// Error.. Not enough arguments.
-			}
-			result += *s++;
-		}
+		stream << t;
 	}
 
-	template<typename T, typename... Args>
-	void variadic_print(std::string& result, const char *s, T value, Args... args)
+	template<typename ... T>
+	void variadic_print(std::stringstream& stream, const T& ... t)
 	{
-		while (*s)
-		{
-			if (*s == '%')
-			{
-				std::stringstream stream;
-				stream << value;
-				result += stream.str();
-				variadic_print(result, s + 1, args...); // call even when *s == 0 to detect extra arguments
-				return;
-			}
-			else if (*s == '\\')
-			{
-				if (*(s + 1) == '%')
-				{
-					++s;
-				}
-			}
-			result += *s++;
-		}
-		// If it gets here, extra argument(s) were provided.    Report in debug or..?
+		(void)std::initializer_list<int>{ (variadic_print(stream, t), 0)... };
 	}
 }
 
@@ -57,12 +27,12 @@ public:
 
 	void log(const char* s);
 
-	template<typename T, typename... Args>
-	void log(const char* s, T arg1, Args... args)
+	template<typename ... T>
+	void log(const T& ... args)
 	{
-		std::string buffer;
-		variadic_print(buffer, s, arg1, args...);
-		log(buffer.c_str());
+		std::stringstream stream;
+		variadic_print(stream, args...);
+		log(stream.str().c_str());
 	}
 
 private:

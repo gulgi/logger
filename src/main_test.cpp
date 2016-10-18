@@ -6,6 +6,6 @@ int main()
 	log.log("test");
 	log.log("test 2");
 	log.log("test 3");
-	log.log("test %\\%%", 4, 5);
-	log.log("test %", 6.f);
+	log.log("test ", 6.1f);
+	log.log("test ", 4, "\\", 5);
 }
