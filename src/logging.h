@@ -4,7 +4,7 @@
 #include <memory>
 #include <sstream>
 
-namespace
+namespace Logging_variadic
 {
 	template<typename T>
 	void variadic_print(std::stringstream& stream, const T& t)
@@ -31,7 +31,7 @@ public:
 	void log(const T& ... args)
 	{
 		std::stringstream stream;
-		variadic_print(stream, args...);
+		Logging_variadic::variadic_print(stream, args...);
 		log(stream.str().c_str());
 	}
 

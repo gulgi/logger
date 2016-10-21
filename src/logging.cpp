@@ -19,7 +19,8 @@ struct Logging::Logging_data
 	std::unique_ptr<std::thread>	logging_thread;
 	std::ofstream					log_file;
 
-	enum : unsigned int {
+	enum : int
+	{
 		log_entry_max_size	= 256,
 		num_log_entries		= 256
 	};
@@ -36,13 +37,14 @@ void Logging::thread_func(Logging_data* data)
 {
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
 	data->logging_running = true;
-	do {
+	do
+	{
 		Sleep(200);
 		const unsigned current_entry_write = data->entry_write;
 		while (data->entry_read != current_entry_write)
 		{
 			const unsigned in_range_entry_read = data->entry_read % Logging_data::num_log_entries;
-			if (!data->log_entries_ready[in_range_entry_read])
+			if ( data->log_entries_ready[in_range_entry_read] == false )
 				break;
 			const char* p = &data->log_entries[in_range_entry_read*Logging_data::log_entry_max_size];
 			//data->log_entries_time[in_range_entry_read];
